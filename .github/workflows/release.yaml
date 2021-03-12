@@ -8,8 +8,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Build
+        run: |
+          echo ${{ github.sha }} > sha.txt
+          echo ${{ github.run_number }} > run_number.txt
+      - name: Test
+        run: |
+          cat sha.txt
+          cat run_number.txt
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            sha.txt
+            run_number.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
